@@ -9,56 +9,43 @@
 <body>
   <h1>L.A.P. – Labyrinthine Area Puzzles</h1>
   <button id="startBtn">Start Game</button>
-<br>
-<button id="showRulesBtn">Show Rules</button>
+  <br>
+  <button id="showRulesBtn">Show Rules</button>
 
-<!-- Rules box (initially hidden) -->
-<div id="rulesModal" class="hidden rules-box">
-  <h3>How to Play L.A.P. – Labyrinthine Area Puzzles</h3>
-  <ul>
-    <li>The board is secretly divided into 4 regions of 5 connected cells each.</li>
-    <li>Each region has a unique pattern (e.g., stripes, lines, waves).</li>
-    <li>You can probe at black dots (intersection points) to inspect a 2×2 block.</li>
-    <li>The probe reveals **which 4 patterns** are present, not where they are.</li>
-    <li>Use the sketch board to deduce the hidden map.</li>
-    <li>You may only use up to 12 distinct probes.</li>
-    <li>Click a sketch cell to assign a pattern. Click again to change it.</li>
-  </ul>
-  <button id="closeRulesBtn">Close</button>
-</div>
-
+  <!-- Rules -->
+  <div id="rulesModal" class="hidden rules-box">
+    <h3>How to Play</h3>
+    <ul>
+      <li>Board has 4 hidden regions of 5 connected cells each.</li>
+      <li>Each region has a unique pattern.</li>
+      <li>You may probe at intersection dots to reveal which 4 patterns are present.</li>
+      <li>Use the sketch board to deduce the layout.</li>
+      <li>You have max 12 probes. When ready, submit your solution.</li>
+    </ul>
+    <button id="closeRulesBtn">Close</button>
+  </div>
 
   <section id="gameArea" class="hidden">
     <div class="sketch-section">
       <div class="patterns">
         <h3>Select Pattern</h3>
-        <div class="pattern-select">
-  <h3>Select Pattern</h3>
-  <div class="pattern-options">
-    <div class="pattern-box" data-pattern="1">
-      <div class="pattern region-1"></div>
-      <div class="pattern-count" id="count-1">0 / 5</div>
-    </div>
-    <div class="pattern-box" data-pattern="2">
-      <div class="pattern region-2"></div>
-      <div class="pattern-count" id="count-2">0 / 5</div>
-    </div>
-    <div class="pattern-box" data-pattern="3">
-      <div class="pattern region-3"></div>
-      <div class="pattern-count" id="count-3">0 / 5</div>
-    </div>
-    <div class="pattern-box" data-pattern="4">
-      <div class="pattern region-4"></div>
-      <div class="pattern-count" id="count-4">0 / 5</div>
-    </div>
-  </div>
-</div>
-
-        <div id="patternPalette">
-          <div class="pattern pattern-1" data-pattern="1"></div>
-          <div class="pattern pattern-2" data-pattern="2"></div>
-          <div class="pattern pattern-3" data-pattern="3"></div>
-          <div class="pattern pattern-4" data-pattern="4"></div>
+        <div class="pattern-options">
+          <div class="pattern-box" data-pattern="1">
+            <div class="pattern region-1"></div>
+            <div class="pattern-count" id="count-1">0 / 5</div>
+          </div>
+          <div class="pattern-box" data-pattern="2">
+            <div class="pattern region-2"></div>
+            <div class="pattern-count" id="count-2">0 / 5</div>
+          </div>
+          <div class="pattern-box" data-pattern="3">
+            <div class="pattern region-3"></div>
+            <div class="pattern-count" id="count-3">0 / 5</div>
+          </div>
+          <div class="pattern-box" data-pattern="4">
+            <div class="pattern region-4"></div>
+            <div class="pattern-count" id="count-4">0 / 5</div>
+          </div>
         </div>
       </div>
 
@@ -67,6 +54,9 @@
 
     <p id="probeCounter">Probes Used: 0 / 12</p>
     <p id="probeResultText"></p>
+    <button id="submitBtn" class="hidden">Submit Solution</button>
+    <button id="restartBtn" class="hidden">Restart Game</button>
+    <p id="resultMessage"></p>
   </section>
 
   <script src="script.js"></script>
