@@ -1,0 +1,96 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f8f8;
+  text-align: center;
+  padding: 20px;
+}
+.hidden { display: none; }
+
+button {
+  padding: 10px 22px;
+  font-size: 16px;
+  background: #3e8ed0;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { background: #2b6ca3; }
+
+#sketchBoardContainer {
+  position: relative;
+  display: inline-block;
+  margin-top: 16px;
+}
+
+/* Sketch Grid */
+.sketch-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 60px);
+  grid-template-rows: repeat(4, 60px);
+  gap: 4px;
+}
+.sketch-cell {
+  width: 60px;
+  height: 60px;
+  background: #e0e0e0;
+  border: 2px solid #aaa;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Pattern styles using background-image */
+.region-1 {
+  background-image: repeating-linear-gradient(45deg, #000 0 4px, transparent 4px 8px);
+}
+.region-2 {
+  background-image: repeating-linear-gradient(-45deg, #000 0 4px, transparent 4px 8px);
+}
+.region-3 {
+  background-image: repeating-linear-gradient(0deg, #000 0 4px, transparent 4px 8px);
+}
+.region-4 {
+  background-image: radial-gradient(circle, #000 10%, transparent 11%);
+  background-size: 10px 10px;
+}
+
+/* Embedded probe buttons */
+.probe-circle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #444;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: transform 0.2s;
+}
+.probe-circle:hover {
+  transform: scale(1.2);
+}
+
+/* Pattern selection buttons */
+#patternSelector {
+  margin: 20px;
+}
+.pattern-btn {
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  border: 2px solid #999;
+  cursor: pointer;
+}
+.pattern-btn.selected {
+  border-color: #3e8ed0;
+}
+
+.pattern-1 { background-image: repeating-linear-gradient(45deg, #000 0 4px, transparent 4px 8px); }
+.pattern-2 { background-image: repeating-linear-gradient(-45deg, #000 0 4px, transparent 4px 8px); }
+.pattern-3 { background-image: repeating-linear-gradient(0deg, #000 0 4px, transparent 4px 8px); }
+.pattern-4 { background-image: radial-gradient(circle, #000 10%, transparent 11%); background-size: 10px 10px; }
+
+#probeCounter {
+  font-weight: bold;
+  margin-top: 16px;
+}

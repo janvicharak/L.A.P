@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>L.A.P. – Labyrinthine Area Puzzles</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>L.A.P. – Labyrinthine Area Puzzles</h1>
+  <button id="startBtn">Start Game</button>
+
+  <!-- Pattern Selector -->
+  <div id="patternSelector" class="hidden">
+    <span>Select Pattern:</span>
+    <button class="pattern-btn pattern-1 selected" data-pattern="1"></button>
+    <button class="pattern-btn pattern-2" data-pattern="2"></button>
+    <button class="pattern-btn pattern-3" data-pattern="3"></button>
+    <button class="pattern-btn pattern-4" data-pattern="4"></button>
+  </div>
+
+  <!-- Game Area -->
+  <section id="gameArea" class="hidden">
+    <h2>Click embedded probes, and use patterns to mark the sketch board.</h2>
+    <div id="sketchBoardContainer">
+      <div id="sketchGrid" class="sketch-grid"></div>
+    </div>
+    <p id="probeCounter">Probes Used: 0 / 12</p>
+    <p id="probeResultText"></p>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
