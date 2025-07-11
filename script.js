@@ -1,106 +1,135 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById('startBtn');
-  const gameArea = document.getElementById('gameArea');
-  const sketchGrid = document.getElementById('sketchGrid');
-  const probeCounterElm = document.getElementById('probeCounter');
-  const probeResultElm = document.getElementById('probeResultText');
-  const sketchBoardContainer = document.getElementById('sketchBoardContainer');
-  const patternSelector = document.getElementById('patternSelector');
+const startBtn = document.getElementById("startBtn");
+const gameArea = document.getElementById("gameArea");
+const sketchGrid = document.getElementById("sketchGrid");
+const patternPalette = document.getElementById("patternPalette");
+const probeCounterElm = document.getElementById("probeCounter");
+const probeResultElm = document.getElementById("probeResultText");
+const showRulesBtn = document.getElementById("showRulesBtn");
+const closeRulesBtn = document.getElementById("closeRulesBtn");
+const rulesModal = document.getElementById("rulesModal");
 
-  let computerMap = [];
-  let probeCount = 0;
-  const usedProbes = new Set();
-  let selectedPattern = 1;
+let selectedPattern = 0;
+let probeCount = 0;
+const usedProbes = new Set();
+let computerMap = []; // 4x5 grid
+let patternCounts = [0, 0, 0, 0, 0]; // index 1–4 used
 
-  // Start game
-  startBtn.addEventListener('click', () => {
-    startBtn.classList.add('hidden');
-    gameArea.classList.remove('hidden');
-    patternSelector.classList.remove('hidden');
+startBtn.addEventListener("click", () => {
+  startBtn.classList.add("hidden");
+  gameArea.classList.remove("hidden");
 
-    probeCount = 0;
-    usedProbes.clear();
+  probeCount = 0;
+  usedProbes.clear();
+  updateProbeCounter();
+
+  generateComputerMap();
+  drawSketchBoard();
+});
+
+showRulesBtn.addEventListener("click", () => {
+  rulesModal.classList.remove("hidden");
+});
+
+closeRulesBtn.addEventListener("click", () => {
+  rulesModal.classList.add("hidden");
+});
+
+patternPalette.querySelectorAll(".pattern").forEach(pat => {
+  pat.addEventListener("click", () => {
+    selectedPattern = parseInt(pat.dataset.pattern);
+    patternPalette.querySelectorAll(".pattern").forEach(p => p.classList.remove("selected"));
+    pat.classList.add("selected");
+  });
+});
+document.querySelectorAll('.pattern-box').forEach(box => {
+  box.addEventListener('click', () => {
+    selectedPattern = parseInt(box.dataset.pattern);
+
+    document.querySelectorAll('.pattern-box').forEach(b => b.classList.remove('active-pattern'));
+    box.classList.add('active-pattern');
+  });
+});
+
+function drawSketchBoard() {
+  sketchGrid.innerHTML = '';
+  const rows = 4, cols = 5;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cell = document.createElement("div");
+      cell.className = "sketch-cell";
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      cell.dataset.pattern = 0;
+
+      cell.addEventListener("click", () => {
+        // Remove old pattern class
+        for (let i = 1; i <= 4; i++) cell.classList.remove(`cell-pattern-${i}`);
+        // Set new pattern
+        if (selectedPattern > 0) {
+          cell.dataset.pattern = selectedPattern;
+          cell.classList.add(`cell-pattern-${selectedPattern}`);
+        }
+      });
+
+      sketchGrid.appendChild(cell);
+    }
+  }
+
+  // Draw probe dots
+  // Draw probe dots only at internal intersections (excluding outer corners)
+for (let r = 0; r < 3; r++) {
+  for (let c = 0; c < 4; c++) {
+    const dot = document.createElement("div");
+    dot.className = "probe-dot";
+
+    const cellSize = 60, gap = 6;
+    const step = cellSize + gap;
+    dot.style.left = `${(c + 1) * step}px`;
+    dot.style.top = `${(r + 1) * step}px`;
+
+    dot.dataset.key = `${r},${c}`;
+    dot.title = `Probe (${r + 1},${c + 1})`;
+
+    dot.addEventListener("click", () => probe(r, c));
+    sketchGrid.appendChild(dot);
+  }
+}
+
+}
+
+function updateProbeCounter() {
+  probeCounterElm.textContent = `Probes Used: ${probeCount} / 12`;
+}
+
+function probe(row, col) {
+  const key = `${row},${col}`;
+  if (!usedProbes.has(key)) {
+    usedProbes.add(key);
+    probeCount++;
     updateProbeCounter();
-
-    generateComputerMap();
-    drawSketchBoard();
-    drawProbes();
-  });
-
-  // Pattern selector buttons
-  document.querySelectorAll('.pattern-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.pattern-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedPattern = parseInt(btn.dataset.pattern);
-    });
-  });
-
-  function updateProbeCounter() {
-    probeCounterElm.textContent = `Probes Used: ${probeCount} / 12`;
   }
 
-  function drawSketchBoard() {
-    sketchGrid.innerHTML = '';
-    for (let r = 0; r < 4; r++) {
-      for (let c = 0; c < 5; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'sketch-cell';
-        cell.dataset.region = 0;
-        cell.addEventListener('click', () => {
-          cell.dataset.region = selectedPattern;
-          cell.className = 'sketch-cell region-' + selectedPattern;
-        });
-        sketchGrid.appendChild(cell);
-      }
+  let resultHTML = `Probe (${row + 1},${col + 1}): Found pattern(s): `;
+
+  for (let r = row; r < row + 2; r++) {
+    for (let c = col; c < col + 2; c++) {
+      const regionId = computerMap[r][c];
+      resultHTML += `<span class="found-pattern pattern-${regionId}"></span> `;
     }
   }
 
-  function drawProbes() {
-    document.querySelectorAll('.probe-circle').forEach(e => e.remove());
+  probeResultElm.innerHTML = resultHTML.trim();
+}
 
-    let probeNum = 1;
-    for (let row = 0; row < 3; row++) {
-      for (let col = 0; col < 4; col++) {
-        const circle = document.createElement('div');
-        circle.className = 'probe-circle';
-        const left = col * 64 + 46;
-        const top = row * 64 + 46;
-        circle.style.left = `${left}px`;
-        circle.style.top = `${top}px`;
-        circle.title = `Probe ${probeNum}`;
-        circle.addEventListener('click', () => probe(row, col, probeNum));
-        sketchBoardContainer.appendChild(circle);
-        probeNum++;
-      }
-    }
-  }
 
-  function probe(row, col, probeId) {
-    const key = `${row},${col}`;
-    if (!usedProbes.has(key)) {
-      usedProbes.add(key);
-      probeCount++;
-      updateProbeCounter();
-    }
+function generateComputerMap() {
+  const rows = 4, cols = 5;
+  computerMap = Array.from({ length: rows }, () => Array(cols).fill(0));
+  for (let id = 1; id <= 4; id++) placeRegion(id);
+}
 
-    const regions = new Set();
-    for (let r = row; r < row + 2; r++) {
-      for (let c = col; c < col + 2; c++) {
-        regions.add(computerMap[r][c]);
-      }
-    }
-
-    probeResultElm.textContent = `Probe ${probeId}: ${regions.size} region(s)`;
-  }
-
-  function generateComputerMap() {
-    const rows = 4, cols = 5;
-    computerMap = Array.from({ length: rows }, () => Array(cols).fill(0));
-    for (let id = 1; id <= 4; id++) placeRegion(id);
-  }
-
-  function placeRegion(regionId) {
+function placeRegion(regionId) {
     const rows = 4, cols = 5;
     let attempts = 0;
     while (attempts++ < 500) {
@@ -116,25 +145,27 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Failed to place region", regionId);
   }
 
-  function bfsFill(sr, sc, need) {
-    const rows = 4, cols = 5;
-    const q = [[sr, sc]], region = [];
-    const seen = Array.from({ length: rows }, () => Array(cols).fill(false));
-    seen[sr][sc] = true;
-    while (q.length && region.length < need) {
-      const [r, c] = q.shift();
-      if (computerMap[r][c] === 0) region.push([r, c]);
-      [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dr, dc]) => {
-        const nr = r + dr, nc = c + dc;
-        if (
-          nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
-          !seen[nr][nc] && computerMap[nr][nc] === 0
-        ) {
-          seen[nr][nc] = true;
-          q.push([nr, nc]);
-        }
-      });
-    }
-    return region;
+
+function bfsFill(sr, sc, need) {
+  const rows = 4, cols = 5;
+  const q = [[sr, sc]];
+  const region = [];
+  const seen = Array.from({ length: rows }, () => Array(cols).fill(false));
+  seen[sr][sc] = true;
+
+  while (q.length && region.length < need) {
+    const [r, c] = q.shift();
+    if (computerMap[r][c] === 0) region.push([r, c]);
+
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dr, dc]) => {
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
+          !seen[nr][nc] && computerMap[nr][nc] === 0) {
+        seen[nr][nc] = true;
+        q.push([nr, nc]);
+      }
+    });
   }
-});
+
+  return region;
+}

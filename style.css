@@ -1,96 +1,276 @@
+/* --------------------- GENERAL --------------------- */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #f8f8f8;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
   text-align: center;
-  padding: 20px;
+  background: linear-gradient(to bottom, #f0f4f8, #e2ecf3);
+  margin: 0;
+  padding: 30px;
+  color: #333;
 }
-.hidden { display: none; }
 
+h1 {
+  font-size: 2.4em;
+  color: #264653;
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* --------------------- BUTTON --------------------- */
 button {
-  padding: 10px 22px;
-  font-size: 16px;
-  background: #3e8ed0;
-  color: #fff;
-  border: 0;
-  border-radius: 6px;
+  padding: 12px 26px;
+  font-size: 17px;
+  background: #2a9d8f;
+  color: white;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-}
-button:hover { background: #2b6ca3; }
-
-#sketchBoardContainer {
-  position: relative;
-  display: inline-block;
-  margin-top: 16px;
+  transition: background 0.3s ease;
 }
 
-/* Sketch Grid */
-.sketch-grid {
+button:hover {
+  background: #21867a;
+}
+
+/* --------------------- LAYOUT --------------------- */
+.sketch-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 30px 40px;
+}
+
+/* --------------------- SKETCH GRID --------------------- */
+#sketchGrid {
   display: grid;
   grid-template-columns: repeat(5, 60px);
   grid-template-rows: repeat(4, 60px);
-  gap: 4px;
+  gap: 6px;
+  position: relative;
 }
+
 .sketch-cell {
   width: 60px;
   height: 60px;
-  background: #e0e0e0;
-  border: 2px solid #aaa;
-  box-sizing: border-box;
+  border: 2px solid #ccc;
+  background: #f0f0f0;
+  border-radius: 6px;
+  position: relative;
   cursor: pointer;
+  transition: transform 0.1s ease-in-out;
 }
 
-/* Pattern styles using background-image */
-.region-1 {
-  background-image: repeating-linear-gradient(45deg, #000 0 4px, transparent 4px 8px);
-}
-.region-2 {
-  background-image: repeating-linear-gradient(-45deg, #000 0 4px, transparent 4px 8px);
-}
-.region-3 {
-  background-image: repeating-linear-gradient(0deg, #000 0 4px, transparent 4px 8px);
-}
-.region-4 {
-  background-image: radial-gradient(circle, #000 10%, transparent 11%);
-  background-size: 10px 10px;
+.sketch-cell:hover {
+  transform: scale(1.04);
 }
 
-/* Embedded probe buttons */
-.probe-circle {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: #444;
+/* --------------------- PATTERN PICKER --------------------- */
+.patterns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#patternPalette {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.pattern {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+  transition: transform 0.15s ease;
+}
+
+.pattern:hover {
+  transform: scale(1.1);
+}
+
+.pattern.selected {
+  outline: 3px solid #2a9d8f;
+  outline-offset: 2px;
+}
+
+/* --------------------- PATTERN STYLES --------------------- */
+/* ---------- VIBRANT PATTERN COLORS ---------- */
+
+.pattern-1, .cell-pattern-1 {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #ff6b6b 0px,
+    #ff6b6b 3px,
+    #ffb3b3 3px,
+    #ffb3b3 8px
+  );
+}
+
+.pattern-2, .cell-pattern-2 {
+  background-image: repeating-linear-gradient(
+    135deg,
+    #6bcff6 0px,
+    #6bcff6 3px,
+    #d0f0ff 3px,
+    #d0f0ff 8px
+  );
+}
+
+.pattern-3, .cell-pattern-3 {
+  background-image: repeating-linear-gradient(
+    90deg,
+    #6bf68e 0px,
+    #6bf68e 3px,
+    #d1ffe0 3px,
+    #d1ffe0 8px
+  );
+}
+
+.pattern-4, .cell-pattern-4 {
+  background-image: repeating-linear-gradient(
+    0deg,
+    #f6cd6b 0px,
+    #f6cd6b 3px,
+    #fff1cd 3px,
+    #fff1cd 8px
+  );
+}
+
+/* --------------------- PROBE DOTS --------------------- */
+.probe-dot {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border: 2px solid white;
   border-radius: 50%;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: transform 0.2s;
-}
-.probe-circle:hover {
-  transform: scale(1.2);
-}
-
-/* Pattern selection buttons */
-#patternSelector {
-  margin: 20px;
-}
-.pattern-btn {
-  width: 30px;
-  height: 30px;
-  margin: 0 5px;
-  border: 2px solid #999;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
   cursor: pointer;
 }
-.pattern-btn.selected {
-  border-color: #3e8ed0;
+
+
+
+.probe-dot:hover {
+  background: #e76f51;
 }
 
-.pattern-1 { background-image: repeating-linear-gradient(45deg, #000 0 4px, transparent 4px 8px); }
-.pattern-2 { background-image: repeating-linear-gradient(-45deg, #000 0 4px, transparent 4px 8px); }
-.pattern-3 { background-image: repeating-linear-gradient(0deg, #000 0 4px, transparent 4px 8px); }
-.pattern-4 { background-image: radial-gradient(circle, #000 10%, transparent 11%); background-size: 10px 10px; }
-
+/* --------------------- TEXT --------------------- */
 #probeCounter {
   font-weight: bold;
-  margin-top: 16px;
+  margin-top: 25px;
+  font-size: 1.2em;
+  color: #264653;
+}
+
+#probeResultText {
+  font-size: 16px;
+  margin-top: 10px;
+  color: #333;
+}
+.found-pattern {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  margin: 0 4px;
+  background-size: cover;
+}
+.rules-box {
+  background: #fff;
+  color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.rules-box ul {
+  padding-left: 20px;
+}
+
+.rules-box li {
+  margin-bottom: 8px;
+}
+
+#showRulesBtn,
+#closeRulesBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #3e8ed0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#showRulesBtn:hover,
+#closeRulesBtn:hover {
+  background-color: #2b6ca3;
+}
+
+.pattern-select {
+  margin: 20px auto;
+}
+
+.pattern-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.pattern-box {
+  text-align: center;
+  cursor: pointer;
+}
+
+.pattern {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.pattern-count {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Region Patterns (you can customize the background with actual pattern images) */
+.region-1 {
+  background: repeating-linear-gradient(45deg, #f94144, #f94144 5px, transparent 5px, transparent 10px);
+}
+
+.region-2 {
+  background: repeating-linear-gradient(-45deg, #577590, #577590 5px, transparent 5px, transparent 10px);
+}
+
+.region-3 {
+  background: repeating-linear-gradient(90deg, #90be6d, #90be6d 5px, transparent 5px, transparent 10px);
+}
+
+.region-4 {
+  background: repeating-linear-gradient(0deg, #f9c74f, #f9c74f 5px, transparent 5px, transparent 10px);
+}
+
+.active-pattern .pattern {
+  outline: 3px solid #333;
 }
